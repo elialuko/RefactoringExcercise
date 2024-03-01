@@ -8,6 +8,7 @@
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -31,6 +32,7 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -88,253 +90,275 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 
 	// initialize menu bar
 	private JMenuBar menuBar() {
-		JMenuBar menuBar = new JMenuBar();
-		JMenu fileMenu, recordMenu, navigateMenu, closeMenu;
+	    JMenuBar menuBar = new JMenuBar();
 
-		fileMenu = new JMenu("File");
-		fileMenu.setMnemonic(KeyEvent.VK_F);
-		recordMenu = new JMenu("Records");
-		recordMenu.setMnemonic(KeyEvent.VK_R);
-		navigateMenu = new JMenu("Navigate");
-		navigateMenu.setMnemonic(KeyEvent.VK_N);
-		closeMenu = new JMenu("Exit");
-		closeMenu.setMnemonic(KeyEvent.VK_E);
+	    addFileMenu(menuBar);
+	    addRecordMenu(menuBar);
+	    addNavigateMenu(menuBar);
+	    addCloseMenu(menuBar);
 
-		menuBar.add(fileMenu);
-		menuBar.add(recordMenu);
-		menuBar.add(navigateMenu);
-		menuBar.add(closeMenu);
+	    return menuBar;
+	}
 
-		fileMenu.add(open = new JMenuItem("Open")).addActionListener(this);
-		open.setMnemonic(KeyEvent.VK_O);
-		open.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
-		fileMenu.add(save = new JMenuItem("Save")).addActionListener(this);
-		save.setMnemonic(KeyEvent.VK_S);
-		save.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
-		fileMenu.add(saveAs = new JMenuItem("Save As")).addActionListener(this);
-		saveAs.setMnemonic(KeyEvent.VK_F2);
-		saveAs.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F2, ActionEvent.CTRL_MASK));
+	private void addFileMenu(JMenuBar menuBar) {
+	    JMenu fileMenu = new JMenu("File");
+	    fileMenu.setMnemonic(KeyEvent.VK_F);
 
-		recordMenu.add(create = new JMenuItem("Create new Record")).addActionListener(this);
-		create.setMnemonic(KeyEvent.VK_N);
-		create.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
-		recordMenu.add(modify = new JMenuItem("Modify Record")).addActionListener(this);
-		modify.setMnemonic(KeyEvent.VK_E);
-		modify.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
-		recordMenu.add(delete = new JMenuItem("Delete Record")).addActionListener(this);
+	    JMenuItem openItem = createMenuItem("Open", KeyEvent.VK_O, KeyEvent.VK_O, ActionEvent.CTRL_MASK);
+	    JMenuItem saveItem = createMenuItem("Save", KeyEvent.VK_S, KeyEvent.VK_S, ActionEvent.CTRL_MASK);
+	    JMenuItem saveAsItem = createMenuItem("Save As", KeyEvent.VK_F2, KeyEvent.VK_F2, ActionEvent.CTRL_MASK);
 
-		navigateMenu.add(firstItem = new JMenuItem("First"));
-		firstItem.addActionListener(this);
-		navigateMenu.add(prevItem = new JMenuItem("Previous"));
-		prevItem.addActionListener(this);
-		navigateMenu.add(nextItem = new JMenuItem("Next"));
-		nextItem.addActionListener(this);
-		navigateMenu.add(lastItem = new JMenuItem("Last"));
-		lastItem.addActionListener(this);
-		navigateMenu.addSeparator();
-		navigateMenu.add(searchById = new JMenuItem("Search by ID")).addActionListener(this);
-		navigateMenu.add(searchBySurname = new JMenuItem("Search by Surname")).addActionListener(this);
-		navigateMenu.add(listAll = new JMenuItem("List all Records")).addActionListener(this);
+	    fileMenu.add(openItem);
+	    fileMenu.add(saveItem);
+	    fileMenu.add(saveAsItem);
 
-		closeMenu.add(closeApp = new JMenuItem("Close")).addActionListener(this);
-		closeApp.setMnemonic(KeyEvent.VK_F4);
-		closeApp.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, ActionEvent.CTRL_MASK));
+	    menuBar.add(fileMenu);
+	}
 
-		return menuBar;
-	}// end menuBar
+	private void addRecordMenu(JMenuBar menuBar) {
+	    JMenu recordMenu = new JMenu("Records");
+	    recordMenu.setMnemonic(KeyEvent.VK_R);
+
+	    JMenuItem createItem = createMenuItem("Create new Record", KeyEvent.VK_N, KeyEvent.VK_N, ActionEvent.CTRL_MASK);
+	    JMenuItem modifyItem = createMenuItem("Modify Record", KeyEvent.VK_E, KeyEvent.VK_E, ActionEvent.CTRL_MASK);
+	    JMenuItem deleteItem = createMenuItem("Delete Record", 0, 0, 0);
+
+	    recordMenu.add(createItem);
+	    recordMenu.add(modifyItem);
+	    recordMenu.add(deleteItem);
+
+	    menuBar.add(recordMenu);
+	}
+
+	private void addNavigateMenu(JMenuBar menuBar) {
+	    JMenu navigateMenu = new JMenu("Navigate");
+	    navigateMenu.setMnemonic(KeyEvent.VK_N);
+
+	    JMenuItem firstItem = createMenuItem("First", 0, 0, 0);
+	    JMenuItem prevItem = createMenuItem("Previous", 0, 0, 0);
+	    JMenuItem nextItem = createMenuItem("Next", 0, 0, 0);
+	    JMenuItem lastItem = createMenuItem("Last", 0, 0, 0);
+	    JMenuItem searchByIdItem = createMenuItem("Search by ID", 0, 0, 0);
+	    JMenuItem searchBySurnameItem = createMenuItem("Search by Surname", 0, 0, 0);
+	    JMenuItem listAllItem = createMenuItem("List all Records", 0, 0, 0);
+
+	    navigateMenu.add(firstItem);
+	    navigateMenu.add(prevItem);
+	    navigateMenu.add(nextItem);
+	    navigateMenu.add(lastItem);
+	    navigateMenu.addSeparator();
+	    navigateMenu.add(searchByIdItem);
+	    navigateMenu.add(searchBySurnameItem);
+	    navigateMenu.add(listAllItem);
+
+	    menuBar.add(navigateMenu);
+	}
+
+	private void addCloseMenu(JMenuBar menuBar) {
+	    JMenu closeMenu = new JMenu("Exit");
+	    closeMenu.setMnemonic(KeyEvent.VK_E);
+
+	    JMenuItem closeAppItem = createMenuItem("Close", KeyEvent.VK_F4, KeyEvent.VK_F4, ActionEvent.CTRL_MASK);
+
+	    closeMenu.add(closeAppItem);
+
+	    menuBar.add(closeMenu);
+	}
+
+	private JMenuItem createMenuItem(String label, int mnemonic, int acceleratorKey, int acceleratorModifier) {
+	    JMenuItem menuItem = new JMenuItem(label);
+	    menuItem.addActionListener(this);
+	    menuItem.setMnemonic(mnemonic);
+	    if (acceleratorKey != 0 && acceleratorModifier != 0) {
+	        menuItem.setAccelerator(KeyStroke.getKeyStroke(acceleratorKey, acceleratorModifier));
+	    }
+	    return menuItem;
+	}
+// end menuBar
 
 	// initialize search panel
 	private JPanel searchPanel() {
-		JPanel searchPanel = new JPanel(new MigLayout());
+	    JPanel searchPanel = new JPanel(new MigLayout());
+	    searchPanel.setBorder(BorderFactory.createTitledBorder("Search"));
 
-		searchPanel.setBorder(BorderFactory.createTitledBorder("Search"));
-		searchPanel.add(new JLabel("Search by ID:"), "growx, pushx");
-		searchPanel.add(searchByIdField = new JTextField(20), "width 200:200:200, growx, pushx");
-		searchByIdField.addActionListener(this);
-		searchByIdField.setDocument(new JTextFieldLimit(20));
-		searchPanel.add(searchId = new JButton("Go"),
-				"width 35:35:35, height 20:20:20, growx, pushx, wrap");
-		searchId.addActionListener(this);
-		searchId.setToolTipText("Search Employee By ID");
+	    addSearchField(searchPanel, "Search by ID:", searchByIdField = new JTextField(20), searchId = createSearchButton("Go", "Search Employee By ID"));
+	    addSearchField(searchPanel, "Search by Surname:", searchBySurnameField = new JTextField(20), searchSurname = createSearchButton("Go", "Search Employee By Surname"));
 
-		searchPanel.add(new JLabel("Search by Surname:"), "growx, pushx");
-		searchPanel.add(searchBySurnameField = new JTextField(20), "width 200:200:200, growx, pushx");
-		searchBySurnameField.addActionListener(this);
-		searchBySurnameField.setDocument(new JTextFieldLimit(20));
-		searchPanel.add(
-				searchSurname = new JButton("Go"),"width 35:35:35, height 20:20:20, growx, pushx, wrap");
-		searchSurname.addActionListener(this);
-		searchSurname.setToolTipText("Search Employee By Surname");
+	    return searchPanel;
+	}
 
-		return searchPanel;
-	}// end searchPanel
+	private void addSearchField(JPanel panel, String labelText, JTextField textField, JButton searchButton) {
+	    panel.add(new JLabel(labelText), "growx, pushx");
+	    textField.setDocument(new JTextFieldLimit(20));
+	    panel.add(textField, "width 200:200:200, growx, pushx");
+	    panel.add(searchButton, "width 35:35:35, height 20:20:20, growx, pushx, wrap");
+	    textField.addActionListener(this);
+	    searchButton.addActionListener(this);
+	}
+
+	private JButton createSearchButton(String label, String tooltip) {
+	    JButton button = new JButton(label);
+	    button.setToolTipText(tooltip);
+	    return button;
+	}
+// end searchPanel
 
 	// initialize navigation panel
 	private JPanel navigPanel() {
-		JPanel navigPanel = new JPanel();
+	    JPanel navigPanel = new JPanel();
 
-		navigPanel.setBorder(BorderFactory.createTitledBorder("Navigate"));
-		navigPanel.add(first = new JButton(new ImageIcon(
-				new ImageIcon("first.png").getImage().getScaledInstance(17, 17, java.awt.Image.SCALE_SMOOTH))));
-		first.setPreferredSize(new Dimension(17, 17));
-		first.addActionListener(this);
-		first.setToolTipText("Display first Record");
+	    navigPanel.setBorder(BorderFactory.createTitledBorder("Navigate"));
 
-		navigPanel.add(previous = new JButton(new ImageIcon(new ImageIcon("prev.png").getImage()
-				.getScaledInstance(17, 17, java.awt.Image.SCALE_SMOOTH))));
-		previous.setPreferredSize(new Dimension(17, 17));
-		previous.addActionListener(this);
-		previous.setToolTipText("Display next Record");
+	    addButtonWithIcon(navigPanel, first = createNavigationButton("first.png", "Display first Record"));
+	    addButtonWithIcon(navigPanel, previous = createNavigationButton("prev.png", "Display previous Record"));
+	    addButtonWithIcon(navigPanel, next = createNavigationButton("next.png", "Display next Record"));
+	    addButtonWithIcon(navigPanel, last = createNavigationButton("last.png", "Display last Record"));
 
-		navigPanel.add(next = new JButton(new ImageIcon(
-				new ImageIcon("next.png").getImage().getScaledInstance(17, 17, java.awt.Image.SCALE_SMOOTH))));
-		next.setPreferredSize(new Dimension(17, 17));
-		next.addActionListener(this);
-		next.setToolTipText("Display previous Record");
+	    return navigPanel;
+	}
 
-		navigPanel.add(last = new JButton(new ImageIcon(
-				new ImageIcon("last.png").getImage().getScaledInstance(17, 17, java.awt.Image.SCALE_SMOOTH))));
-		last.setPreferredSize(new Dimension(17, 17));
-		last.addActionListener(this);
-		last.setToolTipText("Display last Record");
+	private void addButtonWithIcon(JPanel panel, JButton button) {
+	    button.setPreferredSize(new Dimension(17, 17));
+	    button.addActionListener(this);
+	    panel.add(button);
+	}
 
-		return navigPanel;
-	}// end naviPanel
+	private JButton createNavigationButton(String iconPath, String tooltip) {
+	    ImageIcon icon = new ImageIcon(new ImageIcon(iconPath).getImage().getScaledInstance(17, 17, java.awt.Image.SCALE_SMOOTH));
+	    JButton button = new JButton(icon);
+	    button.setToolTipText(tooltip);
+	    return button;
+	}
+// end naviPanel
 
 	private JPanel buttonPanel() {
-		JPanel buttonPanel = new JPanel();
+	    JPanel buttonPanel = new JPanel();
 
-		buttonPanel.add(add = new JButton("Add Record"), "growx, pushx");
-		add.addActionListener(this);
-		add.setToolTipText("Add new Employee Record");
-		buttonPanel.add(edit = new JButton("Edit Record"), "growx, pushx");
-		edit.addActionListener(this);
-		edit.setToolTipText("Edit current Employee");
-		buttonPanel.add(deleteButton = new JButton("Delete Record"), "growx, pushx, wrap");
-		deleteButton.addActionListener(this);
-		deleteButton.setToolTipText("Delete current Employee");
-		buttonPanel.add(displayAll = new JButton("List all Records"), "growx, pushx");
-		displayAll.addActionListener(this);
-		displayAll.setToolTipText("List all Registered Employees");
+	    addButton(buttonPanel, add = createButton("Add Record", "Add new Employee Record"));
+	    addButton(buttonPanel, edit = createButton("Edit Record", "Edit current Employee"));
+	    addButton(buttonPanel, deleteButton = createButton("Delete Record", "Delete current Employee"));
+	    addButton(buttonPanel, displayAll = createButton("List all Records", "List all Registered Employees"));
 
-		return buttonPanel;
+	    return buttonPanel;
 	}
+
+	private void addButton(JPanel panel, JButton button) {
+	    panel.add(button, "growx, pushx, wrap");
+	    button.addActionListener(this);
+	}
+
+	private JButton createButton(String label, String tooltip) {
+	    JButton button = new JButton(label);
+	    button.addActionListener(this);
+	    button.setToolTipText(tooltip);
+	    return button;
+	}
+
 
 	// initialize main/details panel
 	private JPanel detailsPanel() {
-		JPanel empDetails = new JPanel(new MigLayout());
-		JPanel buttonPanel = new JPanel();
-		JTextField field;
+	    JPanel empDetails = new JPanel(new MigLayout());
+	    JPanel buttonPanel = new JPanel();
+	    
+	    empDetails.setBorder(BorderFactory.createTitledBorder("Employee Details"));
 
-		empDetails.setBorder(BorderFactory.createTitledBorder("Employee Details"));
+	    addDetailField(empDetails, new JLabel("ID:"), idField = createTextField(20, true));
+	    addDetailField(empDetails, new JLabel("PPS Number:"), ppsField = createTextField(9, false));
+	    addDetailField(empDetails, new JLabel("Surname:"), surnameField = createTextField(20, false));
+	    addDetailField(empDetails, new JLabel("First Name:"), firstNameField = createTextField(20, false));
+	    addDetailField(empDetails, new JLabel("Gender:"), genderCombo = createComboBox(gender, false));
+	    addDetailField(empDetails, new JLabel("Department:"), departmentCombo = createComboBox(department, false));
+	    addDetailField(empDetails, new JLabel("Salary:"), salaryField = createTextField(20, false));
+	    addDetailField(empDetails, new JLabel("Full Time:"), fullTimeCombo = createComboBox(fullTime, false));
+	    
+	    addDetailButton(buttonPanel, saveChange = createButton("Save", false));
+	    addDetailButton(buttonPanel, cancelChange = createButton("Cancel", false));
 
-		empDetails.add(new JLabel("ID:"), "growx, pushx");
-		empDetails.add(idField = new JTextField(20), "growx, pushx, wrap");
-		idField.setEditable(false);
+	    for (Component component : empDetails.getComponents()) {
+	        if (component instanceof JTextField) {
+	            JTextField field = (JTextField) component;
+	            field.getDocument().addDocumentListener(this);
+	        } else if (component instanceof JComboBox) {
+	            JComboBox<String> comboBox = (JComboBox<String>) component;
+	            comboBox.addItemListener(this);
+	            comboBox.setRenderer(new DefaultListCellRenderer() {
+	                public void paint(Graphics g) {
+	                    setForeground(new Color(65, 65, 65));
+	                    super.paint(g);
+	                }
+	            });
+	        }
+	    }
 
-		empDetails.add(new JLabel("PPS Number:"), "growx, pushx");
-		empDetails.add(ppsField = new JTextField(20), "growx, pushx, wrap");
+	    return empDetails;
+	}
 
-		empDetails.add(new JLabel("Surname:"), "growx, pushx");
-		empDetails.add(surnameField = new JTextField(20), "growx, pushx, wrap");
+	private JTextField createTextField(int limit, boolean editable) {
+	    JTextField textField = new JTextField(20);
+	    textField.setEditable(editable);
+	    textField.setDocument(new JTextFieldLimit(limit));
+	    textField.setFont(font1);
+	    return textField;
+	}
 
-		empDetails.add(new JLabel("First Name:"), "growx, pushx");
-		empDetails.add(firstNameField = new JTextField(20), "growx, pushx, wrap");
+	private JComboBox<String> createComboBox(String[] options, boolean enabled) {
+	    JComboBox<String> comboBox = new JComboBox<>(options);
+	    comboBox.setBackground(Color.WHITE);
+	    comboBox.setEnabled(enabled);
+	    comboBox.setFont(font1);
+	    return comboBox;
+	}
 
-		empDetails.add(new JLabel("Gender:"), "growx, pushx");
-		empDetails.add(genderCombo = new JComboBox<String>(gender), "growx, pushx, wrap");
+	private JButton createButton(String label, boolean visible) {
+	    JButton button = new JButton(label);
+	    button.addActionListener(this);
+	    button.setVisible(visible);
+	    button.setToolTipText(label + " changes");
+	    return button;
+	}
 
-		empDetails.add(new JLabel("Department:"), "growx, pushx");
-		empDetails.add(departmentCombo = new JComboBox<String>(department), "growx, pushx, wrap");
+	private void addDetailField(JPanel panel, JLabel label, JComponent component) {
+	    panel.add(label, "growx, pushx");
+	    panel.add(component, "growx, pushx, wrap");
+	}
 
-		empDetails.add(new JLabel("Salary:"), "growx, pushx");
-		empDetails.add(salaryField = new JTextField(20), "growx, pushx, wrap");
-
-		empDetails.add(new JLabel("Full Time:"), "growx, pushx");
-		empDetails.add(fullTimeCombo = new JComboBox<String>(fullTime), "growx, pushx, wrap");
-
-		buttonPanel.add(saveChange = new JButton("Save"));
-		saveChange.addActionListener(this);
-		saveChange.setVisible(false);
-		saveChange.setToolTipText("Save changes");
-		buttonPanel.add(cancelChange = new JButton("Cancel"));
-		cancelChange.addActionListener(this);
-		cancelChange.setVisible(false);
-		cancelChange.setToolTipText("Cancel edit");
-
-		empDetails.add(buttonPanel, "span 2,growx, pushx,wrap");
-
-		// loop through panel components and add listeners and format
-		for (int i = 0; i < empDetails.getComponentCount(); i++) {
-			empDetails.getComponent(i).setFont(font1);
-			if (empDetails.getComponent(i) instanceof JTextField) {
-				field = (JTextField) empDetails.getComponent(i);
-				field.setEditable(false);
-				if (field == ppsField)
-					field.setDocument(new JTextFieldLimit(9));
-				else
-					field.setDocument(new JTextFieldLimit(20));
-				field.getDocument().addDocumentListener(this);
-			} // end if
-			else if (empDetails.getComponent(i) instanceof JComboBox) {
-				empDetails.getComponent(i).setBackground(Color.WHITE);
-				empDetails.getComponent(i).setEnabled(false);
-				((JComboBox<String>) empDetails.getComponent(i)).addItemListener(this);
-				((JComboBox<String>) empDetails.getComponent(i)).setRenderer(new DefaultListCellRenderer() {
-					// set foregroung to combo boxes
-					public void paint(Graphics g) {
-						setForeground(new Color(65, 65, 65));
-						super.paint(g);
-					}// end paint
-				});
-			} // end else if
-		} // end for
-		return empDetails;
-	}// end detailsPanel
+	private void addDetailButton(JPanel panel, JButton button) {
+	    panel.add(button);
+	}
+// end detailsPanel
 
 	// display current Employee details
 	public void displayRecords(Employee thisEmployee) {
-		int countGender = 0;
-		int countDep = 0;
-		boolean found = false;
+	    if (thisEmployee != null && thisEmployee.getEmployeeId() != 0) {
+	        int countGender = findIndex(gender, Character.toString(thisEmployee.getGender()));
+	        int countDep = findIndex(department, thisEmployee.getDepartment().trim());
 
-		searchByIdField.setText("");
-		searchBySurnameField.setText("");
-		// if Employee is null or ID is 0 do nothing else display Employee
-		// details
-		if (thisEmployee == null) {
-		} else if (thisEmployee.getEmployeeId() == 0) {
-		} else {
-			// find corresponding gender combo box value to current employee
-			while (!found && countGender < gender.length - 1) {
-				if (Character.toString(thisEmployee.getGender()).equalsIgnoreCase(gender[countGender]))
-					found = true;
-				else
-					countGender++;
-			} // end while
-			found = false;
-			// find corresponding department combo box value to current employee
-			while (!found && countDep < department.length - 1) {
-				if (thisEmployee.getDepartment().trim().equalsIgnoreCase(department[countDep]))
-					found = true;
-				else
-					countDep++;
-			} // end while
-			idField.setText(Integer.toString(thisEmployee.getEmployeeId()));
-			ppsField.setText(thisEmployee.getPps().trim());
-			surnameField.setText(thisEmployee.getSurname().trim());
-			firstNameField.setText(thisEmployee.getFirstName());
-			genderCombo.setSelectedIndex(countGender);
-			departmentCombo.setSelectedIndex(countDep);
-			salaryField.setText(format.format(thisEmployee.getSalary()));
-			// set corresponding full time combo box value to current employee
-			if (thisEmployee.getFullTime() == true)
-				fullTimeCombo.setSelectedIndex(1);
-			else
-				fullTimeCombo.setSelectedIndex(2);
-		}
-		change = false;
-	}// end display records
+	        idField.setText(Integer.toString(thisEmployee.getEmployeeId()));
+	        ppsField.setText(thisEmployee.getPps().trim());
+	        surnameField.setText(thisEmployee.getSurname().trim());
+	        firstNameField.setText(thisEmployee.getFirstName());
+	        genderCombo.setSelectedIndex(countGender);
+	        departmentCombo.setSelectedIndex(countDep);
+	        salaryField.setText(format.format(thisEmployee.getSalary()));
+	        fullTimeCombo.setSelectedIndex(thisEmployee.getFullTime() ? 1 : 2);
+	    }
+
+	    searchByIdField.setText("");
+	    searchBySurnameField.setText("");
+	    change = false;
+	}
+
+	private int findIndex(String[] array, String value) {
+	    int index = 0;
+	    for (int i = 0; i < array.length - 1; i++) {
+	        if (array[i].equalsIgnoreCase(value)) {
+	            index = i;
+	            break;
+	        }
+	    }
+	    return index;
+	}
+// end display records
 
 	// display Employee summary dialog
 	private void displayEmployeeSummaryDialog() {
