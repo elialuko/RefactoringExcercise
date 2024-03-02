@@ -381,20 +381,17 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 
 	// find byte start in file for first active record
 	private void firstRecord() {
-		// if any active record in file look for first record
-		if (isSomeoneToDisplay()) {
-			// open file for reading
-			application.openReadFile(file.getAbsolutePath());
-			// get byte start in file for first record
-			currentByteStart = application.getFirst();
-			// assign current Employee to first record in file
-			currentEmployee = application.readRecords(currentByteStart);
-			application.closeReadFile();// close file for reading
-			// if first record is inactive look for next record
-			if (currentEmployee.getEmployeeId() == 0)
-				nextRecord();// look for next record
-		} // end if
-	}// end firstRecord
+	    if (isSomeoneToDisplay()) {
+	        application.openReadFile(file.getAbsolutePath());
+	        currentByteStart = application.getFirst();
+	        currentEmployee = application.readRecords(currentByteStart);
+	        application.closeReadFile();
+
+	        if (currentEmployee.getEmployeeId() == 0)
+	            nextRecord();
+	    }
+	}
+// end firstRecord
 
 	// find byte start in file for previous active record
 	private void previousRecord() {
@@ -457,86 +454,71 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 
 	// search Employee by ID
 	public void searchEmployeeById() {
-		boolean found = false;
+	    boolean found = false;
 
-		try {// try to read correct correct from input
-				// if any active Employee record search for ID else do nothing
-			if (isSomeoneToDisplay()) {
-				firstRecord();// look for first record
-				int firstId = currentEmployee.getEmployeeId();
-				// if ID to search is already displayed do nothing else loop
-				// through records
-				if (searchByIdField.getText().trim().equals(idField.getText().trim()))
-					found = true;
-				else if (searchByIdField.getText().trim().equals(Integer.toString(currentEmployee.getEmployeeId()))) {
-					found = true;
-					displayRecords(currentEmployee);
-				} // end else if
-				else {
-					nextRecord();// look for next record
-					// loop until Employee found or until all Employees have
-					// been checked
-					while (firstId != currentEmployee.getEmployeeId()) {
-						// if found break from loop and display Employee details
-						// else look for next record
-						if (Integer.parseInt(searchByIdField.getText().trim()) == currentEmployee.getEmployeeId()) {
-							found = true;
-							displayRecords(currentEmployee);
-							break;
-						} else
-							nextRecord();// look for next record
-					} // end while
-				} // end else
-					// if Employee not found display message
-				if (!found)
-					JOptionPane.showMessageDialog(null, "Employee not found!");
-			} // end if
-		} // end try
-		catch (NumberFormatException e) {
-			searchByIdField.setBackground(new Color(255, 150, 150));
-			JOptionPane.showMessageDialog(null, "Wrong ID format!");
-		} // end catch
-		searchByIdField.setBackground(Color.WHITE);
-		searchByIdField.setText("");
-	}// end searchEmployeeByID
+	    try {
+	        if (isSomeoneToDisplay()) {
+	            firstRecord();
+	            int firstId = currentEmployee.getEmployeeId();
+
+	            if (searchByIdField.getText().trim().equals(idField.getText().trim()))
+	                found = true;
+	            else if (searchByIdField.getText().trim().equals(Integer.toString(currentEmployee.getEmployeeId()))) {
+	                found = true;
+	                displayRecords(currentEmployee);
+	            } else {
+	                nextRecord();
+	                while (firstId != currentEmployee.getEmployeeId()) {
+	                    if (Integer.parseInt(searchByIdField.getText().trim()) == currentEmployee.getEmployeeId()) {
+	                        found = true;
+	                        displayRecords(currentEmployee);
+	                        break;
+	                    } else
+	                        nextRecord();
+	                }
+	            }
+	            if (!found)
+	                JOptionPane.showMessageDialog(null, "Employee not found!");
+	        }
+	    } catch (NumberFormatException e) {
+	        searchByIdField.setBackground(new Color(255, 150, 150));
+	        JOptionPane.showMessageDialog(null, "Wrong ID format!");
+	    }
+	    searchByIdField.setBackground(Color.WHITE);
+	    searchByIdField.setText("");
+	}
+// end searchEmployeeByID
 
 	// search Employee by surname
 	public void searchEmployeeBySurname() {
-		boolean found = false;
-		// if any active Employee record search for ID else do nothing
-		if (isSomeoneToDisplay()) {
-			firstRecord();// look for first record
-			String firstSurname = currentEmployee.getSurname().trim();
-			// if ID to search is already displayed do nothing else loop through
-			// records
-			if (searchBySurnameField.getText().trim().equalsIgnoreCase(surnameField.getText().trim()))
-				found = true;
-			else if (searchBySurnameField.getText().trim().equalsIgnoreCase(currentEmployee.getSurname().trim())) {
-				found = true;
-				displayRecords(currentEmployee);
-			} // end else if
-			else {
-				nextRecord();// look for next record
-				// loop until Employee found or until all Employees have been
-				// checked
-				while (!firstSurname.trim().equalsIgnoreCase(currentEmployee.getSurname().trim())) {
-					// if found break from loop and display Employee details
-					// else look for next record
-					if (searchBySurnameField.getText().trim().equalsIgnoreCase(currentEmployee.getSurname().trim())) {
-						found = true;
-						displayRecords(currentEmployee);
-						break;
-					} // end if
-					else
-						nextRecord();// look for next record
-				} // end while
-			} // end else
-				// if Employee not found display message
-			if (!found)
-				JOptionPane.showMessageDialog(null, "Employee not found!");
-		} // end if
-		searchBySurnameField.setText("");
-	}// end searchEmployeeBySurname
+	    boolean found = false;
+
+	    if (isSomeoneToDisplay()) {
+	        firstRecord();
+	        String firstSurname = currentEmployee.getSurname().trim();
+
+	        if (searchBySurnameField.getText().trim().equalsIgnoreCase(surnameField.getText().trim()))
+	            found = true;
+	        else if (searchBySurnameField.getText().trim().equalsIgnoreCase(currentEmployee.getSurname().trim())) {
+	            found = true;
+	            displayRecords(currentEmployee);
+	        } else {
+	            nextRecord();
+	            while (!firstSurname.trim().equalsIgnoreCase(currentEmployee.getSurname().trim())) {
+	                if (searchBySurnameField.getText().trim().equalsIgnoreCase(currentEmployee.getSurname().trim())) {
+	                    found = true;
+	                    displayRecords(currentEmployee);
+	                    break;
+	                } else
+	                    nextRecord();
+	            }
+	        }
+	        if (!found)
+	            JOptionPane.showMessageDialog(null, "Employee not found!");
+	    }
+	    searchBySurnameField.setText("");
+	}
+// end searchEmployeeBySurname
 
 	// get next free ID from Employees in the file
 	public int getNextFreeId() {
@@ -579,25 +561,21 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 
 	// delete (make inactive - empty) record from file
 	private void deleteRecord() {
-		if (isSomeoneToDisplay()) {// if any active record in file display
-									// message and delete record
-			int returnVal = JOptionPane.showOptionDialog(frame, "Do you want to delete record?", "Delete",
-					JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
-			// if answer yes delete (make inactive - empty) record
-			if (returnVal == JOptionPane.YES_OPTION) {
-				// open file for writing
-				application.openWriteFile(file.getAbsolutePath());
-				// delete (make inactive - empty) record in file proper position
-				application.deleteRecords(currentByteStart);
-				application.closeWriteFile();// close file for writing
-				// if any active record in file display next record
-				if (isSomeoneToDisplay()) {
-					nextRecord();// look for next record
-					displayRecords(currentEmployee);
-				} // end if
-			} // end if
-		} // end if
-	}// end deleteDecord
+	    if (isSomeoneToDisplay()) {
+	        int returnVal = JOptionPane.showOptionDialog(frame, "Do you want to delete record?", "Delete",
+	                JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+	        if (returnVal == JOptionPane.YES_OPTION) {
+	            application.openWriteFile(file.getAbsolutePath());
+	            application.deleteRecords(currentByteStart);
+	            application.closeWriteFile();
+	            if (isSomeoneToDisplay()) {
+	                nextRecord();
+	                displayRecords(currentEmployee);
+	            }
+	        }
+	    }
+	}
+// end deleteDecord
 
 	// create vector of vectors with all Employee details
 	private Vector<Object> getAllEmloyees() {
@@ -727,60 +705,54 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 
 	// check for input in text fields
 	private boolean checkInput() {
-		boolean valid = true;
-		// if any of inputs are in wrong format, colour text field and display
-		// message
-		if (ppsField.isEditable() && ppsField.getText().trim().isEmpty()) {
-			ppsField.setBackground(new Color(255, 150, 150));
-			valid = false;
-		} // end if
-		if (ppsField.isEditable() && correctPps(ppsField.getText().trim(), currentByteStart)) {
-			ppsField.setBackground(new Color(255, 150, 150));
-			valid = false;
-		} // end if
-		if (surnameField.isEditable() && surnameField.getText().trim().isEmpty()) {
-			surnameField.setBackground(new Color(255, 150, 150));
-			valid = false;
-		} // end if
-		if (firstNameField.isEditable() && firstNameField.getText().trim().isEmpty()) {
-			firstNameField.setBackground(new Color(255, 150, 150));
-			valid = false;
-		} // end if
-		if (genderCombo.getSelectedIndex() == 0 && genderCombo.isEnabled()) {
-			genderCombo.setBackground(new Color(255, 150, 150));
-			valid = false;
-		} // end if
-		if (departmentCombo.getSelectedIndex() == 0 && departmentCombo.isEnabled()) {
-			departmentCombo.setBackground(new Color(255, 150, 150));
-			valid = false;
-		} // end if
-		try {// try to get values from text field
-			Double.parseDouble(salaryField.getText());
-			// check if salary is greater than 0
-			if (Double.parseDouble(salaryField.getText()) < 0) {
-				salaryField.setBackground(new Color(255, 150, 150));
-				valid = false;
-			} // end if
-		} // end try
-		catch (NumberFormatException num) {
-			if (salaryField.isEditable()) {
-				salaryField.setBackground(new Color(255, 150, 150));
-				valid = false;
-			} // end if
-		} // end catch
-		if (fullTimeCombo.getSelectedIndex() == 0 && fullTimeCombo.isEnabled()) {
-			fullTimeCombo.setBackground(new Color(255, 150, 150));
-			valid = false;
-		} // end if
-			// display message if any input or format is wrong
-		if (!valid)
-			JOptionPane.showMessageDialog(null, "Wrong values or format! Please check!");
-		// set text field to white colour if text fields are editable
-		if (ppsField.isEditable())
-			setToWhite();
+	    boolean valid = true;
 
-		return valid;
+	    if (ppsField.isEditable() && (ppsField.getText().trim().isEmpty() || correctPps(ppsField.getText().trim(), currentByteStart))) {
+	        ppsField.setBackground(new Color(255, 150, 150));
+	        valid = false;
+	    }
+	    if (surnameField.isEditable() && surnameField.getText().trim().isEmpty()) {
+	        surnameField.setBackground(new Color(255, 150, 150));
+	        valid = false;
+	    }
+	    if (firstNameField.isEditable() && firstNameField.getText().trim().isEmpty()) {
+	        firstNameField.setBackground(new Color(255, 150, 150));
+	        valid = false;
+	    }
+	    if (genderCombo.getSelectedIndex() == 0 && genderCombo.isEnabled()) {
+	        genderCombo.setBackground(new Color(255, 150, 150));
+	        valid = false;
+	    }
+	    if (departmentCombo.getSelectedIndex() == 0 && departmentCombo.isEnabled()) {
+	        departmentCombo.setBackground(new Color(255, 150, 150));
+	        valid = false;
+	    }
+	    try {
+	        double salary = Double.parseDouble(salaryField.getText());
+	        if (salary < 0) {
+	            salaryField.setBackground(new Color(255, 150, 150));
+	            valid = false;
+	        }
+	    } catch (NumberFormatException num) {
+	        if (salaryField.isEditable()) {
+	            salaryField.setBackground(new Color(255, 150, 150));
+	            valid = false;
+	        }
+	    }
+	    if (fullTimeCombo.getSelectedIndex() == 0 && fullTimeCombo.isEnabled()) {
+	        fullTimeCombo.setBackground(new Color(255, 150, 150));
+	        valid = false;
+	    }
+
+	    if (!valid)
+	        JOptionPane.showMessageDialog(null, "Wrong values or format! Please check!");
+
+	    if (ppsField.isEditable())
+	        setToWhite();
+
+	    return valid;
 	}
+
 
 	// set text field background colour to white
 	private void setToWhite() {
